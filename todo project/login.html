@@ -1,0 +1,99 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../asset/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+        integrity="sha512-c42qTSw/wPZ3/5LBzD+Bw5f7bSF2oxou6wEb+I/lqeaKV5FDIfMvvRp772y4jcJLKuGUOpbJMdg/BTl50fJYAw=="
+        crossorigin="anonymous" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 offset-sm-3">
+
+                <div class="card mt-5">
+
+                    <div class="card-header">Login Here</div>
+                    <div class="card-body">
+                        <div id="output"></div>
+                        <input type="text" class="form-control" placeholder="Enter First Name" id="userName"
+                            data-error="Im coming from data attribute" />
+                        <span class="invalid-feedback" id="fnameError"></span>
+                        <br />
+                        <input type="text" class="form-control" placeholder="Enter Password" id="userPass"
+                            data-error="Please Enter Last Naem" />
+                        <span class="invalid-feedback" id="lnameError"></span>
+                        <br />
+                        <button class="btn btn-dark btn-block" id="login">
+                            Get Data
+                        </button>
+                    </div>
+                </div>
+                <div id="tbl">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../asset/js/bootstrap.bundle.js"></script>
+    <!-- <script src="./asset/js/error.js"></script> -->
+    <!-- <script src="asset/js/error.js"></script> -->
+    <script>
+        let data = localStorage.getItem("login");
+        if (data) {
+            window.location = "./todo.html";
+        }
+        let userName = document.getElementById("userName");
+        let userPass = document.getElementById("userPass");
+        let login = document.getElementById("login");
+        login.addEventListener("click", function () {
+            let username = userName.value;
+            let pass = userPass.value;
+
+            let data = JSON.parse(localStorage.getItem("users"));
+            if ((username == "admin") && (pass == "123")) {
+                window.location = "./admin.html";
+            }
+            for (let index = 0; index < data.length; index++) {
+                if ((username == data[index].firstName) && (pass == data[index].password)) {
+                    console.log("password matched");
+                    localStorage.setItem("login", username);
+                    window.location = "./todo.html";
+                } else {
+                    console.log("error");
+                }
+
+            }
+
+        })
+
+        // window.location.href = 'http://www.google.com';
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

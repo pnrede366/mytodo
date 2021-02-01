@@ -1,0 +1,225 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+        integrity="sha512-c42qTSw/wPZ3/5LBzD+Bw5f7bSF2oxou6wEb+I/lqeaKV5FDIfMvvRp772y4jcJLKuGUOpbJMdg/BTl50fJYAw=="
+        crossorigin="anonymous" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 offset-2">
+                <div class="card mt-5">
+                    <div class="card-header text-center">Add Todo</div>
+                    <div class="card-body">
+                        <input type="text" placeholder="Enter Task Name" id="taskName" class="form-control"
+                            data-error="Please Enter Task Name">
+                        <span class="invalid-feedback"></span>
+                        <br>
+                        <textarea id="taskDesc" placeholder="Enter Description" class="form-control"
+                            data-error="Please Enter Task Description"></textarea>
+                        <span class="invalid-feedback"></span>
+                        <br>
+                        <select id="taskPriority" class="form-control" data-error="Please Choose Priority">
+                            <option value="none">Choose Priority</option>
+                            <option value="high">High</option>
+                            <option value="mid">Mid</option>
+                            <option value="low">Low</option>
+                        </select>
+                        <span class="invalid-feedback"></span>
+                        <br>
+                        <button class="btn btn-outline-success btn-lg btn-block" id="addTask">Add Task</button>
+                        <button class="btn btn-outline-danger btn-lg btn-block" id="addTask"
+                            onclick="logout()">Logout</button>
+
+                    </div>
+                </div>
+                <div id="output"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal  -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Task</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" class="form-control" id="taskId">
+                    <br>
+                    <input id="m-task" type="text" class="form-control">
+                    <br>
+                    <textarea name="" id="m-desc" class="form-control"></textarea>
+                    <br>
+                    <select name="" id="m-priority" class="form-control">
+                        <option value="none">Choose Your Priority</option>
+                        <option value="high">High</option>
+                        <option value="mid">Midum</option>
+                        <option value="low">Low</option>
+
+                    </select>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-success" onclick="updateData()">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal ends here -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="./asset/js/error.js"></script>
+    <script>
+        let taskName = document.querySelector("#taskName");
+        let taskDesc = document.querySelector("#taskDesc");
+        let priority = document.querySelector("#taskPriority");
+        let addTaskBtn = document.querySelector("#addTask");
+
+        addTaskBtn.addEventListener("click", function () {
+            if (!requierdError(taskName) && !requierdError(taskDesc)) {
+                if (priority.value !== "none") {
+                    priority.classList.remove("is-invalid");
+                    priority.classList.add("is-valid");
+                    // create object
+                    let obj = {
+                        name: taskName.value,
+                        desc: taskDesc.value,
+                        priority: priority.value
+                    }
+                    let arr = [];
+                    let nm = localStorage.getItem("login");
+                    let data = JSON.parse(localStorage.getItem(nm));
+                    if (data !== null) {
+                        arr.push(obj);
+                        let res = data.concat(arr);
+                        let nm = localStorage.getItem("login");
+                        localStorage.setItem(nm, JSON.stringify(res));
+                        displayTask()
+                        clearForm();
+                        return;
+                    }
+                    arr.push(obj);
+
+                    localStorage.setItem(nm, JSON.stringify(arr));
+                    displayTask();
+                    clearForm();
+                    return;
+                }
+                priority.classList.add("is-invalid");
+                document.querySelector("#" + priority.id + "~ span").innerHTML = priority.dataset.error;
+
+            }
+        });
+        displayTask();
+        // display task starts here
+        function displayTask() {
+            let nm = localStorage.getItem("login");
+            let data = JSON.parse(localStorage.getItem(nm));
+            if (data != null) {
+                document.getElementById("output").innerHTML = "";
+                for (let index = 0; index < data.length; index++) {
+                    let border = "";
+                    switch (data[index].priority) {
+                        case "high": border = "border-danger"; break;
+                        case "mid": border = "border-warning"; break;
+                        case "low": border = "border-success"; break;
+                        default: console.log("Something went Wrong"); break;
+                    }
+                    document.getElementById("output").innerHTML += `
+                <div class="card mt-2 border ${border}">
+                    <div class="card-header" data-toggle="collapse" data-target="#tt${index}">
+                        ${data[index].name} <span class="ml-4" onclick="editData(${index})">Edit</span><span class="ml-4" onclick="deleteData(${index})">Delete</span>
+                    </div>
+                    <div class="collapse" id="tt${index}">
+                        <div class="card-body ">${data[index].desc}</div>
+                    </div >
+                </div >`;
+
+                }
+            } else {
+                document.getElementById("output").innerHTML = "<h2 class='mt-4'>NO DATA FOUND</h2>"
+            }
+        }
+        // display task Ends here
+
+        //updateData
+        function updateData() {
+
+            let mTask = document.getElementById("m-task").value;
+            let mDesc = document.getElementById("m-desc").value;
+            let mPriority = document.getElementById("m-priority").value;
+            let mId = document.getElementById("taskId").value;
+            let nm = localStorage.getItem("login");
+            let data = JSON.parse(localStorage.getItem(nm));
+            data[mId].name = mTask;
+            data[mId].desc = mDesc;
+            data[mId].priority = mPriority;
+
+            localStorage.setItem(nm, JSON.stringify(data));
+            displayTask();
+            $('#exampleModal').modal('hide');
+
+
+        }
+        //updateData ends here
+        function editData(i) {
+            $('#exampleModal').modal('show');
+            let data = JSON.parse(localStorage.getItem(localStorage.getItem("login")));
+            document.getElementById("m-task").value = data[i].name;
+            document.getElementById("m-desc").value = data[i].desc;
+            document.getElementById("m-priority").value = data[i].priority;
+            document.getElementById("taskId").value = i;
+            console.log(i);
+            return i;
+        }
+        // clear form
+        function clearForm() {
+            taskName.value = "";
+            taskDesc.value = "";
+            priority.value = "none";
+        }
+        function deleteData(i) {
+            let nm = localStorage.getItem("login");
+            let data = JSON.parse(localStorage.getItem(nm));
+            newData = data.splice(i, 1);
+            localStorage.setItem(nm, JSON.stringify(data));
+            displayTask();
+
+        }
+        function logout() {
+            localStorage.setItem('login', "")
+            window.location = "./login.html";
+        }
+
+    </script>
+
+</body>
+
+</html>

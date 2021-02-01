@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    <h1>admin pannel</h1>
+    <a href="logout.html">logout</a>
+    <div id="tbl"></div>
+    <div id="output"></div>
+    <div id="usertask"></div>
+    <script>
+        if (localStorage.getItem('login') == "") {
+
+            window.location = "./login.html";
+            // return;
+        }
+
+
+        let data = JSON.parse(localStorage.getItem("users"));
+        let str = `
+        <div class="row">
+        <table class="offset-1 col-sm-6 table table-bordered table-dark">
+            <tr>
+              <th>Sr no</th>
+              <th>First Name</th>
+            </tr>
+            </div>`;
+        // console.log(data.length);
+        for (let i = 0; i < data.length; i++) {
+            console.log(data[i].firstName);
+            str += `
+            <tr>
+              <td>${i}</td>
+              <td id="name" >${data[i].firstName} &nbsp;<button class="btn btn-light" onclick="displayName('${data[i].firstName}')">Show</button></td>
+            </tr>
+          `;
+            // console.log(`${data[i].firstName}`);
+        }
+        str += `</table>`;
+        document.getElementById("tbl").innerHTML = str;
+        function displayName(mId, index) {
+
+            // console.log(document.getElementById("name").value
+            // console.log(getname);
+            // );
+
+            let nm = JSON.parse(localStorage.getItem(`${mId}`));
+            if (localStorage.getItem(`${mId}`)) {
+
+                console.log("true");
+                // if(nm===)
+                let str = `
+        <div class="row">
+        <table class="offset-1 col-sm-6 table table-bordered table-dark">
+            <tr>
+              <th>Task no.</th>
+              <th>Task Name</th>
+            </tr>
+            </div>`;
+                for (let i = 0; i < nm.length; i++) {
+
+                    str += `
+            <tr>
+              <td>${i}</td>
+           <td>${nm[i].name}</td>
+            </tr>
+          `;
+                    // console.log(`${data[i].firstName}`);
+                }
+                str += `</table>`;
+
+                document.getElementById("usertask").innerHTML = str;
+
+
+                // document.getElementById("usertask").innerHTML=``
+                // console.log(data[mId].desc);
+
+                // console.log(`${data[i].firstName}`);
+
+            }
+            else {
+                document.getElementById("usertask").innerHTML = `<h3 class=" container bg-dark text-light">User Do Not Any Task</h3>`;
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>
